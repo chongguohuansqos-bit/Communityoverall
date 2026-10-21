@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok Shop Japan クリエイター向け 統合版</title>
+<style>
+:root{--red:#FE2C55;--cyan:#25F4EE;--gray:#161823;--card:#1C1F2E;--purple:#8B5CF6;--orange:#F59E0B}
+.header{background:linear-gradient(135deg,#2d1b47 0%,#1a0b2e 50%,#3d0d1f 100%)}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',sans-serif;background:var(--gray);color:#fff;max-width:480px;margin:0 auto;padding-bottom:40px}
+.header{padding:20px 16px;position:relative;overflow:hidden}
+.header-icon{display:inline-flex;align-items:center;gap:8px;font-size:22px;font-weight:700;margin-bottom:8px}
+.header-icon .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.header-title{font-size:26px;font-weight:800;letter-spacing:.5px;line-height:1.2;margin-bottom:6px}
+.header-sub{font-size:13px;opacity:.85;line-height:1.5}
+.level-badge{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-top:10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);margin-right:6px}
+
+/* Level band (integrated only) */
+.level-band{display:flex;background:var(--card);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:11}
+.level-btn{flex:1;padding:12px 6px;text-align:center;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.2px}
+.level-btn.active{color:#fff;border-bottom-color:var(--red);background:linear-gradient(180deg,rgba(254,44,85,0.08),transparent)}
+
+.tabs{display:flex;background:var(--card);border-bottom:1px solid rgba(255,255,255,0.1);position:sticky;top:0;z-index:10}
+.tabs.with-level{top:46px}
+.tab{flex:1;padding:14px 8px;text-align:center;font-size:12px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:#fff;border-bottom-color:var(--red)}
+.tab-content{display:none;padding:16px}
+.tab-content.active{display:block}
+
+/* Category filter chips */
+.cat-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.cat-chip{font-size:11px;padding:5px 10px;border-radius:14px;background:rgba(255,255,255,0.06);color:#bbb;cursor:pointer;border:1px solid rgba(255,255,255,0.08);transition:all .15s;user-select:none}
+.cat-chip.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* Section title */
+.section-title{font-size:13px;font-weight:700;color:#aaa;margin:4px 2px 12px;letter-spacing:.5px}
+
+/* Product card */
+.product{background:var(--card);border-radius:12px;padding:12px;margin-bottom:12px;overflow:hidden}
+.product-row{display:flex;gap:12px}
+.product-thumb{width:88px;height:88px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#2a2d3e;position:relative}
+.product-thumb img{width:100%;height:100%;object-fit:cover}
+.product-info{flex:1;min-width:0;display:flex;flex-direction:column}
+.product-name{font-size:13px;line-height:1.4;font-weight:600;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(37,244,238,0.15);color:var(--cyan);border:1px solid rgba(37,244,238,0.3)}
+.tag.level{background:rgba(254,44,85,0.15);color:#FDA4B8;border-color:rgba(254,44,85,0.3)}
+.tag.price{background:rgba(245,158,11,0.15);color:#FCD34D;border-color:rgba(245,158,11,0.3)}
+.btn-row{display:flex;gap:8px;margin-top:auto}
+.btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;text-align:center;cursor:pointer;text-decoration:none;transition:transform .1s}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--red);color:#fff}
+
+/* Disclaimer box */
+.disclaimer{background:linear-gradient(135deg,rgba(254,44,85,0.1),rgba(139,92,246,0.08));border:1px solid rgba(254,44,85,0.3);border-radius:12px;padding:14px;margin-bottom:18px}
+.disclaimer-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.disclaimer-badge{font-size:11px;padding:3px 8px;border-radius:4px;background:#FE2C55;color:#fff;font-weight:700}
+.disclaimer-title{font-size:13px;font-weight:700;color:#fff}
+.disclaimer-summary{font-size:12px;line-height:1.65;color:#e5e5e5}
+.disclaimer-summary strong{color:#FE2C55}
+.disclaimer-details{display:none;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.15);font-size:12px;line-height:1.7;color:#d5d5d5}
+.disclaimer-details ul{margin:6px 0 10px 18px}
+.disclaimer-details li{margin-bottom:4px}
+.disclaimer-details .caution{color:#FFB4B4;font-weight:600;margin-top:8px;display:block;padding:8px;background:rgba(254,44,85,0.08);border-radius:6px}
+.disclaimer-details .continue-note{margin-top:10px;padding:10px;border-radius:8px;background:rgba(37,244,238,0.08);border-left:3px solid #25F4EE;color:#D5F6F4}
+.disclaimer-toggle{display:inline-block;margin-top:10px;font-size:12px;color:#25F4EE;cursor:pointer;font-weight:600;user-select:none}
+.disclaimer-toggle::before{content:"\25B6 ";font-size:10px}
+.disclaimer.open .disclaimer-details{display:block}
+.disclaimer.open .disclaimer-toggle::before{content:"\25BC "}
+
+/* Video card — TRUE preview via iframe */
+.video-card{background:var(--card);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.video-embed-wrap{position:relative;width:100%;aspect-ratio:9/16;max-height:580px;background:#000;overflow:hidden}
+.video-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-body{padding:10px 12px}
+.video-link{display:block;padding:10px;text-align:center;font-size:13px;background:var(--red);color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
+
+/* Level view (integrated only) */
+.level-view{display:none}
+.level-view.active{display:block}
+
+/* Integrated variant body themes */
+body.lv-l1{background:#0d0d18}
+body.lv-l1 .product,body.lv-l1 .video-card{background:#12141f}
+body.lv-l1 .header{background:linear-gradient(135deg,#1a0b2e 0%,#2d1b47 50%,#0a1a3e 100%);border-bottom:3px solid;border-image:linear-gradient(90deg,var(--red),var(--purple),var(--cyan)) 1}
+body.lv-l2{background:#0a0f1e}
+body.lv-l2 .product,body.lv-l2 .video-card{background:#141828}
+body.lv-l2 .header{background:linear-gradient(135deg,#0a1a3e 0%,#1a0b2e 50%,#3d0d1f 100%);border-bottom:3px solid;border-image:linear-gradient(90deg,var(--orange),var(--red),var(--purple)) 1}
+
+footer{text-align:center;padding:20px;font-size:11px;color:#666}
+
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon"><span class="dot"></span>TikTok Shop Japan</div>
+    <div class="header-title" id="hdr-title">はじめよう編</div>
+    <div class="header-sub" id="hdr-sub">初めてのクリエイターでも売れやすい、鉄板商品&バズ動画をお届け</div>
+    <div class="level-badge" id="hdr-badge">🌱 初心者向け</div>
+    <div class="level-badge">📅 2026-10-20 更新</div>
+  </div>
+
+  <div class="level-band">
+    <div class="level-btn active" onclick="switchLevel(0)">🌱 初心者向け</div><div class="level-btn" onclick="switchLevel(1)">🚀 経験者向け</div><div class="level-btn" onclick="switchLevel(2)">⭐ 経験者α向け</div>
+  </div>
+
+  
+        <div class="level-view active" id="lv-0">
+          <div class="tabs with-level">
+            <div class="tab active" onclick="switchTab(0,'lv-0')">🛍️ 商品リスト</div>
+            <div class="tab" onclick="switchTab(1,'lv-0')">🎬 人気動画</div>
+          </div>
+          <div class="tab-content active">
+            
+    <div class="section-title">鉄板売れ筋リスト ・ 全42件</div>
+    <div class="cat-filter"><div class="cat-chip active" onclick="filterCat(this,'all')">すべて</div><div class="cat-chip" onclick="filterCat(this,'Beauty')">美容・コスメ</div><div class="cat-chip" onclick="filterCat(this,'Collectibles')">ホビー・コレクション</div><div class="cat-chip" onclick="filterCat(this,'Electronics')">家電・デジタル</div><div class="cat-chip" onclick="filterCat(this,'FMCG')">日用品・消耗品</div><div class="cat-chip" onclick="filterCat(this,'Fashion')">ファッション</div><div class="cat-chip" onclick="filterCat(this,'Home &amp; Living')">ホーム・リビング</div></div>
+    
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/838275bd29184f8fad5569c1b6ec7beb~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】バルクオム THE FABRIC FRAGRANCE 300mL フレグランスミスト ファブリックミスト ルームフレグランス フレグランス 香水 消臭 抗菌 芳香</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥2,200</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732359904146261820?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/14c3f6704305431899d07b803f70768c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">お試し香水 アナザー 1.5ml EDP COLLEGRANCE024</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥1,600</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734420882282153980?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/0e5515b396d7420d9cfd63eb11a7257c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">お試し香水 レイジーサンデーモーニング 1.5ml EDT(オードトワレ) COLLEGRANCE030(コレグランス030)</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥850</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734371871900010492?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/a4dae8396a1e4320bdcff19bf6f092dd~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">モレモ　ヘアエッセンスディライトフルオイル MOREMO HAIR ESSENCE DELIGHTFUL OIL 70ml</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥1,650</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734091227618903465?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1d1d382755f2472fb779f310e6719bb6~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">垢抜けの定番アイテム｜iromikke カラーアイライナー 0.1mm極細美ライン ウォータープルーフ ブレにくい にじみにくい 擦れに強い ブラック ブラウンベース　リニューアル５色新登場</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥780</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731405606361466116?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/16aceb7d9bdc473e9c4d851a335e4572~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】Wonjungyo ストレートシャンプー／ストレートトリートメント 細い髪にも、太い髪にもうねりを忘れて、ストレートなまとまりを。　Wonjungyo Hair</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥132</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731811708249212135?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/6e07f86bc6524545af09aceaa48cd363~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【GUGU】（カリカリシリーズのチャーム）リアルなエビフライ型のチャーム、ゆっくりと戻る弾性でストレス解消に役立つおもちゃ、カリカリチャーム、バッグチャーム、ストレス解消おもちゃ、かわいいコレクションアイテム、ちゅっちゅして楽しい、手作り、食品グレードのシリコン</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥2,888</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734840502065989061?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/6dab248058424bb1b9827fdbb46bd68d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">SnowCake Handcraft 三層シュフレテーマのストレス解消おもちゃ（もち米ペースト）</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥1,520</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735900595419055690?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/8fddcfe7027a4b45992dc12b63d453ea~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【小サイズ】癒やしグッズフルーツ型 ぷにぷにスクイーズ キーホルダー ストレス解消 おもちゃ バッグチャーム bsy38</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥1,699</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736980615459669437?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/506bda3097094f8197f36a82b29c9066~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ミニアイロンビーズ2.6mmナノビーズセットプラスチック製DIY·八ンドメイド·手芸用24色/48色/72色/96色/144色(約8400/16800/25200/33600/50400粒)工具七卜付きビ一ズペン·ピンセット·プレート·アイロンペーパ一付 アイロン選択可 知育玩具アクセサリ一作り親子遊び 誕生日·クリスマスプレゼント</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥1,600</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734346309804459962?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e9f4fb6eb55347fa96819fc2316ac724~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">SnowCake Handcraft「糯米糍」テーマのストレス解消おもちゃ、糯米ペースト 180±15g</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥1,500</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735379964573615690?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f94f8d9fef5e4511a8b6728cd6268a07~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">手作りスクイーズ ストレス解消グッズtoys S- ヨーグルト触感</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥1,950</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736909251312715293?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/99c5a23051c541bea92007e15c62967d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Monster 5.4 MQT52 Bluetooth5.4 ドビーアトモス Hl-Fl サウンドクオリティ 5000Hz インテリジェントノイズリダクション パノラマサウンド 0.08秒超低遅延 PUBG CODM対応 24時間超長バッテリー寿命 ブラック 音声ヘッドフォン</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥2,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735502070604072467?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-maliva-i-o3syd03w52-us/d732ddece03545849419122cb51e22b0~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">書籍『自分の思いを言葉にする こどもアウトプット図鑑』小学生のうちに身につけておきたい話す力　書く力　行動力</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥1,650</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733220348487108181?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/3185538cfbf64b7493ae80cf08a6a006~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">USB充電式 ミニシーラー 食品保存シーラー デジタル表示 バッグシーラー カッター付き キッチン用品</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥2,212</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731588369109190319?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/04f4bc32863641fbaee39b433cbf62ae~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">英語版- Kanji フラッシュカード N1・N2・N3 ― 2010〜2025年 JLPT試験の完全セット- MoMo Nihongo</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥1,250</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732988280903993163?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/a7ab7b4d62f14e858bf7f211e31db08c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Ulanzi Maglock magsafe用吸盤式スマホホルダー 磁気マグネット式 スマホマウント 小型吸着式スタンド 両面スタンド マグセーに対応 360度回転 片手操作 折りたたみ式 金属リング付き 多角度調整 アルミ製 iPhone17/16用/Android/カメラ/ライトに対応 MA39</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥2,180</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733049281950352930?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/51b6711ba9eb4367ba4ef7d668146dd2~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Switch2 ドック 付き不要【22.5.0】対応 Lemorele L100 USB‑C HDMI 変換ケーブル 約2M 直接テレビ出力 4K@60Hz PD100W急速充電【2026改良型 接続安定】高耐久アルミ合金 過電流過熱保護 Switch1&amp;2/OLED/Steam Deck/ROG Ally/MacBook/iPhone15/16/17などに対応 持ち運び便利</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥2,599</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734308271754085854?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/94dbf1ac0e6543c884976385a47aaf72~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">NIMASO iPhone 18/ iPhone 18 Pro / iPhone 18 Pro Max/ iPhone 17 Pro max/ iPhone 16/ iPhone 15/14用ケース MagSafe対応 強力磁力 38個N52マグネット搭載 カメラコントロールカバー付き 米軍MIL規格認証 耐衝撃性 高透明度PC素材</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥1,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732454512670180826?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/d6128eaf2a9845f589e04ca1304d85f6~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">BabyBus ふしぎな水塗り絵 くり返し遊べる 汚れない 色鮮やか 持ちやすい ゴム紐付き 可愛いイラスト 知育  ベビーバス ベイビーバス 運筆 知育 2歳 3歳 4歳 ぬりえ</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥1,078</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731593026950104458?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/c67ac481c30a481d93b28d4f0aa26bf9~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Ulanzi VL-81 LEDビデオライト 小型 充電式 3000mAh Type-C 3200k-5600k CRI95+ 色温度調整可能 スマート カメラライト 補助照明 撮影用ライト DJI Osmo Pocket Action Mobile 3 Gopro Hero 8/7/6/5 iPhone Samsung Canon Nikon Sony用</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥2,147</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732395254549022242?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e8a24bf8d9bf437ba878b2dea626a971~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">VITAS（バイタス） VITA POWER ビタパワー マカ 亜鉛 マルチビタミン 120タブレット 30日分</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥2,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731422323608815225?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/847030ba3fd34766a7e9172afcba3b12~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ビタミンD 4000IU 365日分 サプリ ビタミンD3 日本製 Vitanad+（ビタナッド）</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥2,190</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734579664385705221?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b3fad7aff8d0478dbd57195ba69525d8~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">VITAS × LIFEGUARD（バイタス×ライフガード）アルギニン シトルリン ライフガード風味 240g L-アルギニン90000mg L-シトルリン24000mg</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥2,780</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732358542895122041?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/138002d021dd4cc985a53f68fe208889~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">エディーズ  プレミアム ポップコーン シリーズ キャラメル カレー 抹茶 ココナッツ アールグレイ ゆず パイナップル</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥2,580</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733548725135311926?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/d3f0ff38e0e840ee906eeed467a6baa1~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">アフューム (arFUM) 香りビーズ マリンブリーズ マリンノートとフレッシュムスクの香り</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥1,870</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731872996500604855?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/44617401904241aaa03bee29bc9b906d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Nature In 幸せのトリプトファン︎ 60日分 乳酸菌配合 トリプトファン 1粒200mg×120粒 24000mg配合 はぴねす乳酸菌 &amp; ビタミンB6配合 サプリメント 国内製造 日本製</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥1,990</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732024099581298501?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5626e3210e2d4c03960b1a8001c86b1a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">E.MIRAI サプリメント　YOIYOI～酔い良い～PRIME H2 plus　（2箱8粒/1袋60粒）　日本製　水素・オルニチン・カキエキス</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥2,160</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736140659396609626?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/3d3d97874f834ebcabde0ce775fec956~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">[ M L XL 選べるサイズ ] 深Uネック細リブ長袖Tシャツ [C7316] レディース 20代 30代 40代 骨格ストレート 骨スト トップス ロンT リブTシャツ リブロンT リブ 細リブ 深Uネック Uネック サイズが選べる LL 着痩せ 華奢見え 厚い 厚手 しっかり インナー ベーシック シンプル リブカットソー カットソー ストレッチ</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥2,090</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732398764389140381?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/2de6da60c0d2413995ca0d2958735f21~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ニット帽 レディース 秋冬 ルーズシルエット 小顔見え すっぽりかぶれる すっぴん隠しにも◎ 頭の大きさを選びにくい やわらか素材 軽やか こなれ感 おしゃれ ビーニー</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥2,100</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737314094276970097?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/693d902ddce34181b0d1acd10bd84be2~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズコンプレッションタンクトップ、サンドスタイルのノースリーブシェイプウェアベスト、ノースリーブシャツ、お腹引き締めストレッチインナーシャツ、通気性のある薄型のボディシェイパー（ジム時および普段使い用）</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥1,761</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731587356586510124?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/868183528bff4f8b892ef19f1ac85ac6~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">（昭子）（ハードクリームシリーズ）5色、ゆっくり戻るストレス解消おもちゃ、かわいい星形のキャンディ、バッグチャーム、スクイーズ、手作り、食品グレードシリコン</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥2,888</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734596522835019205?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/57e64a926acb4b6ba2ac35b75d41d3e0~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">選べるタイプ 選べるサイズ もっちりリブニットトップス [C6260] ボートネック モックネック タートルネック ヘンリーネック 長袖 Lサイズ レタスオリジナルサイズ LLサイズ XLサイズ</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥1,990</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732788981261109149?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b655f9621173430eb8203ffba4c90598~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ウォッシャブルVネックorモックネックスフレニットトップス [C6301]  レディース  20代 30代 40代 スフレ スフレニット ゆったり イージーケア ハイネック ふわふわ Lサイズ</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥1,990</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731809780381484957?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/412368ad2aa940b99d0f0ca749675f86~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【U-POWER公式・TikTok販売5万台突破】スマホホルダー 車 ナノゲル吸着×真空吸盤 W固定構造 magsafe対応 360度回転 N55磁石 片手操作 iPhone Android全機種対応 スマホスタンド 車用  カー用品</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥2,380</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731678188215699071?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4b38a6532b734e71adb4052b1a179914~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Pawtotoストレスボール　シリーズ　可愛い置物｜TPR・癒しインテリア・ギフトにおすすめ｜ストレス解消｜Asmr</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥1,699</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735105080602625389?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/ff5c52e590484b21b8a401dd619254dd~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ガラス油膜除去 強力洗浄 フロントガラス・サイドウィンドー用 コーティング剤 長時間持続 撥水剤 油膜取り剤</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥2,398</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737040004072047721?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-maliva-i-o3syd03w52-us/0ada804679d94bf58d6b190e34b80e66~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">スタイリッシュなキャスター付きサイドテーブル、高さ調整可能、省スペース、デスク、テーブル、看護ケア、ベッドテーブル、ナイトテーブル、ホワイト、北欧、高さ調整可能、ローテーブル、カフェテーブル、四角形、シングルリビング用、PCデスク、コンピューターデスク</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥2,390</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732010767190688826?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b1b2a967feeb4c4ba9140b47f444ad1e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">高級厚手ソファカバー、取り外し可能、1枚入り、ソフトな座面パッド、滑り止め付き、洗濯機で丸洗可、汎用ソファ保護カバー、ペット対応、モダンデザイン、コーナーソファ・2人掛け・3人掛けソファに対応</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥1,890</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735241927475693385?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/de9ed9aef2404238a50d10a7603a79f1~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MIYOU 卓上押し型・捏ねて楽しめる卓上置物、超柔らかいシリコン素材、ゆっくり戻る弾性でストレス解消、ハンドメイド・DIY用おもちゃ</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥1,170</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736699453991978615?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/8e9a3cbf6e3447dc959bad66f1663741~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">隙間掃除ブラシ 5本セット、硬いブラシ、浴室・キッチン・タイル・窓の隙間掃除に最適、春の掃除ツール</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥1,580</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732009663423808559?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L0">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/d111f0665afd462d81c5b51a4acaa0bc~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">BOTTLEBOTTLE 蓋付きタンブラー 溢れない 600ml 大容量水筒 内側ステンレス / セラミックコーティング 2タイプから選べる 二重構造ステンレス コーヒーボトル 真空断熱 保冷保温 ストロー 直飲み</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥2,780</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734371694711833968?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+          </div>
+          <div class="tab-content">
+            
+<div class="disclaimer">
+  <div class="disclaimer-head">
+    <span class="disclaimer-badge">免責</span>
+    <span class="disclaimer-title">動画を見る前にお読みください</span>
+  </div>
+  <div class="disclaimer-summary">
+    <strong>コピーではなく「仕組み」を参考に。</strong><br>
+    時期・動画の構造・商品のアピール・期間限定、この4つの視点でご覧ください。
+  </div>
+  <div class="disclaimer-toggle" onclick="toggleDisclaimer(this)">詳しく見る</div>
+  <div class="disclaimer-details">
+    <strong>見るときの4つの視点</strong>
+    <ul>
+      <li><strong>⏰ 時期</strong>：なぜこのタイミングで伸びたのか（セール・季節・キャンペーン）</li>
+      <li><strong>🎬 動画の構造</strong>：冒頭フック・展開・CTAの組み立て</li>
+      <li><strong>🛍️ 商品のアピール</strong>：どの機能・ベネフィットをどの順で訴求しているか</li>
+      <li><strong>⏳ 期間限定</strong>：クーポン・在庫・時限訴求の作り方</li>
+    </ul>
+    <div class="caution">⚠️ そのままコピーした動画を投稿すると、プラットフォームのペナルティ対象になる可能性があります。「コミュニティ運営が共有してくれたから大丈夫」とはなりません。<strong>投稿されたコンテンツの責任はクリエイターご自身に帰属します。</strong></div>
+    <div class="continue-note">
+      📌 引き続きランクインままの動画もあるため、「先週と変わっていない」と思わないでください。<br>
+      <strong>ランクイン継続中の動画は、それだけ持続的に機能している証</strong>です。新規登場の動画と合わせて、両方の視点でご覧ください。
+    </div>
+  </div>
+</div>
+
+            
+    <div class="section-title">今週の人気動画 ・ 全9件</div>
+    
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7694171321021893906?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@jfhdgenhddhud/video/7694171321021893906" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7688807945718598932?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@hana_kakeibo_/video/7688807945718598932" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7696412608814910741?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@sana_1125373/video/7696412608814910741" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7692646107943308562?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@yuito.knitting/video/7692646107943308562" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693638244835134738?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@cswdgkijgfjh/video/7693638244835134738" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7691682776398957844?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@tyuvbyje7xl/video/7691682776398957844" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7697070492796112144?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@fukuisanpo/video/7697070492796112144" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7694183174577884437?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@damu_sandayo/video/7694183174577884437" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693496577943522581?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@soamama65/video/7693496577943522581" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+    
+          </div>
+        </div>
+        
+        <div class="level-view" id="lv-1">
+          <div class="tabs with-level">
+            <div class="tab active" onclick="switchTab(0,'lv-1')">🛍️ 商品リスト</div>
+            <div class="tab" onclick="switchTab(1,'lv-1')">🎬 人気動画</div>
+          </div>
+          <div class="tab-content active">
+            
+    <div class="section-title">急上昇トレンドリスト ・ 全47件</div>
+    <div class="cat-filter"><div class="cat-chip active" onclick="filterCat(this,'all')">すべて</div><div class="cat-chip" onclick="filterCat(this,'Beauty')">美容・コスメ</div><div class="cat-chip" onclick="filterCat(this,'Collectibles')">ホビー・コレクション</div><div class="cat-chip" onclick="filterCat(this,'Electronics')">家電・デジタル</div><div class="cat-chip" onclick="filterCat(this,'FMCG')">日用品・消耗品</div><div class="cat-chip" onclick="filterCat(this,'Fashion')">ファッション</div><div class="cat-chip" onclick="filterCat(this,'Home &amp; Living')">ホーム・リビング</div></div>
+    
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/73180edee41349d4b9b252d656e9c52a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">bonparme ボンパルム ボン リペア シャンプー トリートメント セット ヘアミルク</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,000</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731594336586467093?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/64bd2accc6014cac99575a1a30f6629c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【刺す次世代 CICA ケア】Giona（ジオナ） ハイドロスキンショットマイクロニードル美容液 ヨモギ ツボクサエキス 肌荒れ赤み対策 ドクダミナイアシンアミド 敏感肌 無添加 日本製 30mL</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734305469931029553?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/bb2b957e6a3e49f992ea59fd4c79f255~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ORVANN 練り香水 ベルガモット ムスク ホワイトリリー イランイラン 賦香率20％ パルファム 香り長続き メンズ 香水</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737092174703200255?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/225d21e9645d4473ba547d761c33a4f3~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ベルバイ BELLE BAI ベルナンバー9 オードパルファン / トランジション グレア 50ml 男性/女性/ユニセックス [530088]</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,300</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732993210757187230?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/06e5bcbf0ae246e8afa9a68243001820~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">VITAJAM ビタジャム ビタミン 炭酸パック ビタミンC誘導体 レチノール ナイアシンアミド 配合 毛穴ケア(5包）</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,180</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731636037484905823?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5c5da2ca7b2e40c29c42fa1045846a7c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ベルバイ BELLE BAI ベルナンバー7 オードパルファン / グレースフル ロード 50ml 男性/女性/ユニセックス [530101]</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,300</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732993289975465630?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/fe454de68b2f4e438c2ae1ede733c4e9~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">「イーグルビーク」斜め刃爪切り 3点セット ― ワイドな開口部・飛散防止カバー付き・25度斜め刃・巻き爪や高齢者の厚い爪にも対応</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,750</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732937304360847112?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/44ebcd4bc8ed470c9fbfdbaccf4c78d7~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">KYOGOKU　カラーセラム　カラートリートメント　ヘアケア　高彩度　ヘアトリートメント</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥3,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731639955230721813?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/c52eb6b6a7a548e6924c7672809a38d3~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【福袋1つプレゼント】動物シリーズぷにぷにスクイーズ すぐ戻るスクイーズ  ストレス解消になるおもちゃ</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735477978855147359?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/16d1d4145af2482d8f218465a40099b8~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">猫の爪シリーズ taonini 猫の爪シリーズ 手作り 無害 食品グレードシリコン 押し出し式 ゆっくりした反発でストレス解消につながるおもちゃ</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,600</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733645431100573435?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1611eb3afac8474f8fae69b17f2f2f5e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【DODO】（ねっとり泥感）2層構造、押し当ててストレス解消できるおもちゃで、ゆっくりと戻る弾力性があります。おいしいマシュマロ、リアルなマシュマロ、かわいい収集アイテム、コレクション向けアイテム、握って遊べる、手作り、食品グレードのシリコン製です。</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,666</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736853763706357189?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/7b9ab94d6f6142a0a43cdc0ee59ca949~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">LUCKCAT キラキラ流砂入り 超大型肉球スクイーズ 水の感触 ぷにぷに癒しのアイテム ストレス解消おもちゃ 320g</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736951058857493522?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/0c34ff9326d04f54a2a895d9d44f9a8a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【新商品人気シリーズ】ミニチュアシーンシールブック 造景ステッカー 7.0・8.0・9.0 DIYコラージュ 手帳デコ 選べる豊富なデザイン</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,699</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734581977081415046?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1474a1297a6d49978686edc804f8c73e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">M416電動ガン おもちゃ 弾鏈連続射撃 7.4Vバッテリー付き 射程12m ガラス吸着安全軟弾 男の子 誕生日プレゼント</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥3,280</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737875817476622107?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4b0fa7192d4d4b94b029305ffa268e51~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【dadawoca】ナノガラス ムダ毛ケア｜角質ケア対応｜やさしい使い心地 電源不要 敏感肌OK 全身ケア 男女兼用 繰り返し使える エコ設計</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥3,920</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734718201718081105?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/635df1f485fa41e4952b6c24cf8769da~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MOFT【公式直営店】磁力強化版 Snap-On スマホスタンド iPhone 18/17/16/15/14/13/12シリーズ対応 カードケース MagSafe対応 マグネット カード収納 ウォレットスタンド スマホグリップ 薄型軽量 折り畳み式 持ち歩き便利 ミニマリスト MOVAS</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥4,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734491174326798110?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5a1020dc81b44670893297f661b6abc3~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">JLPT N3-N2 合格できる 文字・語彙1300問｜ Official Past Exam Collection [With Answers &amp; Scripts]｜English・မြန်မာဘာသာ・नेपाली・Tiếng Việt・Indonesia</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥3,500</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737707901796321231?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4007de6ed8ef45b59ae90350c8a82a98~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">日本語会話｜Everyday &amp; Working Japanese Conversations｜जापानी दैनिक तथा कार्यस्थल संवाद Kaiwa : Cuộc sống + Công việc</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥3,500</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737171383770777551?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/fb55e73fbfbe4c3982e94b9c34a3ccfb~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">コードレスリンパマッサージ機、9段階吸引＆温熱機能、2in1電動カッピング・カッサマッサージ、赤色ライト加熱、充電式ハンディケア機器</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥3,897</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736632399715861734?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5361960bef6d4174b21dd7d4d89ac68e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">TOPADRE 65W急速充電器【AIスマートディスプレイ・自動温度調節】USB-C PD対応 Type-C ACアダプター 自動識別 iPhone 17/17e/16/15・iPad・MacBook対応 PSE適合</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥4,299</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736850299176716057?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b5614f8226b04cf580c8628aab8176c5~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Ulanzi pocket4用三脚 ukaに対応 多機能pocket3クイックリリーススタンド 磁気マグネット 【スタンド・三脚・手持ち・掛けるモード】 安定 軽量 折りたたみ 持ち運び便利 210°角度調整 Vlog用 POV撮影 旅行 出張 飛行機 新幹線 車 キッチン オフィス セルフィー/生放送/ビデオ通話/撮影録画/動画鑑賞に適用 pocket4/pocket3に対応 MA66</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥3,499</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735218470812943906?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/73096833651f43258f1553c2b76be829~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】ELLISS-エルリス リポソーマルビタミンC 1000mg 選べるレモン風味 あまおう風味 30包</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732095504970187957?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/96a04a554cab4fb598107f6ea46792b3~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】 ELLISS-エルリス シャイニングショット シャインマスカット風味 30包</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734414309899863221?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/cd0565aef865443991907c051596ccec~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">豊潤サジー 1000ml サジージュース【紙パックタイプ】 公式 フィネス 200種類以上の栄養素が含まれたサジー使用 ジュース 鉄分 リンゴ酸 ミネラル ビタミンC βカロテン アミノ酸 ビタミンE 有機JASサジー原料 健康食品 送料無料 沙棘 スーパーフード 栄養補給 サジーベリー</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,720</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737464189300147268?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/c1d5f190da76409bb994b4ec20983897~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">HULX-FACTOR ハルクファクター クレアチン モノハイドレート 純度99.9％ ピュア パウダー 無添加 筋トレ トレーニング サプリ 610g 1kg プレワークアウト バルク  アップ トレーニー</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732580494466188629?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/8883e8fed3954ef899c7f685b0220968~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">PiLie・mo 【飲むビタミンC×飲むレチノール】ビタミンＣ サプリ 66,000mg リポソームビタミンC リポソーム レチノール 30,000 グルタチオン 含有酵母 ビタミンD αリポ酸 アルファリポ酸 エラグ酸 アスタキサンチン エクソソーム  30包 日本製</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736083348893763095?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e60bb428e5ad4e4e9533316b598f5efb~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【デート前に1粒】DEO LOCK ブレスタブレット 口臭 タブレット 60粒 シトラスミックス味 緑茶カテキン EGCg 配合 発泡 息 リフレッシュ ブレスケア エチケット お口ケア 男性 女性</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737269061263853089?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/fbaccfe6fe084e7fbeb0e05941b3b497~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【FAKEチーズケーキ】アニメの世界から飛び出してきた！！よつ葉のクリームチーズでつくるカットタイプ6P入チーズケーキ</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,990</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734405032454358765?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1c37f4ac06f14ce3988f3c9fd45d0c92~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">HABIONE +ENERGY 栄養機能食品(亜鉛・葉酸) 高規格高麗人参 個包装30包 シトルリン アルギニン バイオペリン配合 日本製 GMP認定工場 30日分</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735686593163003333?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/d6a3673f303449c4a1c8040dd847754a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">とろける天然まぐろネギトロ 500g（50g×10袋） 小分け個包装 流水解凍10分</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,810</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736787076047931279?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f09712e2b99540bf8ad0e13bc1a057cc~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">送料無料 JOJO DIARD姿勢サポートベルト 薄型 軽量 メッシュ 背筋サポーター 猫背対策 肩・背中サポート 男女兼用 デスクワーク 在宅ワーク</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥3,450</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736788890904332151?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4c3190511d164c13bc37798dc0ada75a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ ワークカーゴパンツ、マルチポケット、ドローストリング付き伸縮ウエスト、ストレートシルエット、快適で丈夫</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,603</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736828818456151154?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/85fc3da4a1514eeca7bcb1483cd96e40~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ 長袖 プルオーバー スウェットシャツ カジュアル おしゃれ 快適 ソフト素材 着回しやすい デイリーウェア</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,440</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737248815107638386?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b4fa53db367c4de49d9e4ebc9aba8a8b~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ新作夏サンダル、滑り止め厚底、アウトドアカップル向けスポーツビーチシューズ、快適な透かしデザイン、暖かい気候に最適</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,079</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735192604493644952?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/03992bbea8b549b397c5689c440d7030~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">2026年秋新作 ユニセックス カラーマウンテンウィンドブレーカー オーバーサイズ 防风アウター</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥4,440</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737500181952300279?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f0ea7857eb2b4c6297e1bda738c217d0~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ ワッフルデザイン ラウンドネックスウェットシャツ、カジュアル・快適、着回しやすいデザイン、デイリー・通勤・アウトドア・スポーツ向け</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,601</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737165211976762454?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/affa7c98142946a69021a88c457ce7af~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ 秋冬用 フリース裏起毛 1/4ジップ スタンドカラースウェット、ゆったりフィット、無地・厚手・防寒仕様、柔らかくシワになりにくい素材、ビジネス・ゴルフ・通勤・アウトドア・カジュアルに対応、9色展開、S～3XL</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,858</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736900488339359243?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/afa55b2118d24a0fb23ec5a28a74b68e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【大人ナチュラル】レース切り替えフードパーカー リボン絞りバルーン袖裾レース付きゆったりトップス 透け感素材 3 色展開カジュアル春夏ブラウス</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,652</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736711780453287127?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4a7226d216c244ff8c3fe0cbedce0f67~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【YIBOLEMON】レディース ストラップレス インビジブルブラ 小胸用 極厚パッド バストアップ・集胸効果 ノンワイヤー 滑り止め 垂れ防止 ウェディングドレス・パーティードレスに最適</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥3,000</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737037140778517816?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-ttp.tiktokcdn-us.com/tos-useast5-i-omjb5zjo8w-tx/e5720b1ef5f94bcb9ccd922e49ebe2bd~tplv-omjb5zjo8w-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">JOYTUTUS 充電式 12000RPM 車用ポリッシャー＆ワッカー 3 in 1 塗装キズ修復・フロントガラスオイルフィルム除去用コードレスサンディングマシン</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥4,188</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732149746763859143?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/d57ee126873342538a71c8826e139a89~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【1,250円！お得継続中】今がお買い得 NEXIスマホホルダー 車 マグネット 【2026 magsafeホルダー】 360°調整可能【真空吸盤+超強磁力】 N55磁石 ワイヤレス充電 車載スマホホルダー カー用品 高級合金素材 車 【片手操作】 スマホスタンド iPhone16/iphone8/iphone7/iPhone SE/Sony/Samsung/HUAWEI/Google/iPhone&amp;Android全機種と(ケース対応)</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,580</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732186420948731336?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e2b0438a9c4b4673b34b27741e2dd37b~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">5面開き収納ボックス 折りたたみ式 衣類収納 収納ケース クローゼット収納 キャスター付き 5面開き 前開き 組み立て式 屋外 おしゃれ プラスチック コンテナ ボックス</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737093656172333026?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-maliva-i-o3syd03w52-us/8305585a04b04d0ea9014407e0ec38d0~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ひつじのショーン おしりふき 限定デザイン 厚手 蓋付き タオルのような厚み 80枚×9個 手口ふき おてふき 水分たっぷり 肌にやさしい 出産祝い 赤ちゃん ベビー</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,280</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734445573013735305?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/291625977df8478eb5dda583f1024cae~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ウインドシールドクリーニングツール、クリアな視認性·簡単なインテリアクリーニング·多目的使用拡張可能なロッドデザイン</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,133</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733365673770321171?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/912e30ed392d455ab3c359cf842960ac~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">万能ソケット 7～19mm マルチソケット クロムバナジウム鋼製 電動ドライバー対応 ソケットレンチ DIY・整備用工具</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,180</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737617760880527108?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-maliva-i-o3syd03w52-us/83f868e7724e4f2283f5199b8eedb640~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【まくら株】はじめてのふくらはぎ枕 （ふくらはぎをふんわり包み込む癒しの足枕） 足用クッション 足用まくら 足の枕 足置き枕 足上げ 腰 リラックス グッズ わた 男性 女性 健康 癒やし 人気 就寝 寝るとき 足を置く フットピロー ギフト プレゼント ラッピング無料 敬老の日</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,950</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731499590788089166?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L1">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/29f90dd3fd884501affec5a9e7503501~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">WÜRTHウルト ウォッシャー液 2L エタノール型 メタノール不使用 撥水対応 油膜取り 超純水使用 液あと・鳥フン・虫汚れ・ホコリ落とし ビビり防止 まぶしさ軽減 フロントガラス 窓ガラス 洗浄 洗車 ワイパーゴムケア pH中性 損傷ゼロ ピーチの香り カー用品 ウィンドウウォッシャー液</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥3,360</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734109484434556884?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+          </div>
+          <div class="tab-content">
+            
+<div class="disclaimer">
+  <div class="disclaimer-head">
+    <span class="disclaimer-badge">免責</span>
+    <span class="disclaimer-title">動画を見る前にお読みください</span>
+  </div>
+  <div class="disclaimer-summary">
+    <strong>コピーではなく「仕組み」を参考に。</strong><br>
+    時期・動画の構造・商品のアピール・期間限定、この4つの視点でご覧ください。
+  </div>
+  <div class="disclaimer-toggle" onclick="toggleDisclaimer(this)">詳しく見る</div>
+  <div class="disclaimer-details">
+    <strong>見るときの4つの視点</strong>
+    <ul>
+      <li><strong>⏰ 時期</strong>：なぜこのタイミングで伸びたのか（セール・季節・キャンペーン）</li>
+      <li><strong>🎬 動画の構造</strong>：冒頭フック・展開・CTAの組み立て</li>
+      <li><strong>🛍️ 商品のアピール</strong>：どの機能・ベネフィットをどの順で訴求しているか</li>
+      <li><strong>⏳ 期間限定</strong>：クーポン・在庫・時限訴求の作り方</li>
+    </ul>
+    <div class="caution">⚠️ そのままコピーした動画を投稿すると、プラットフォームのペナルティ対象になる可能性があります。「コミュニティ運営が共有してくれたから大丈夫」とはなりません。<strong>投稿されたコンテンツの責任はクリエイターご自身に帰属します。</strong></div>
+    <div class="continue-note">
+      📌 引き続きランクインままの動画もあるため、「先週と変わっていない」と思わないでください。<br>
+      <strong>ランクイン継続中の動画は、それだけ持続的に機能している証</strong>です。新規登場の動画と合わせて、両方の視点でご覧ください。
+    </div>
+  </div>
+</div>
+
+            
+    <div class="section-title">今週の人気動画 ・ 全9件</div>
+    
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7691550231183379732?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@sugiyume_/video/7691550231183379732" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7695634095660862727?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@psk_ns/video/7695634095660862727" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7694489648902475028?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@okomenopapa/video/7694489648902475028" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7694287450943884565?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@shiro.whiteveil/video/7694287450943884565" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693763128097639700?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@ochihari0222/video/7693763128097639700" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7691575136922750214?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@kimichann_everydaylife/video/7691575136922750214" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7691687277906414849?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@rino_cosme/video/7691687277906414849" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7692003168061820181?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@hanakodesse/video/7692003168061820181" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693846575751187720?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@furutady7qu/video/7693846575751187720" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+    
+          </div>
+        </div>
+        
+        <div class="level-view" id="lv-2">
+          <div class="tabs with-level">
+            <div class="tab active" onclick="switchTab(0,'lv-2')">🛍️ 商品リスト</div>
+            <div class="tab" onclick="switchTab(1,'lv-2')">🎬 人気動画</div>
+          </div>
+          <div class="tab-content active">
+            
+    <div class="section-title">プレミアムピックアップ ・ 全49件</div>
+    <div class="cat-filter"><div class="cat-chip active" onclick="filterCat(this,'all')">すべて</div><div class="cat-chip" onclick="filterCat(this,'Beauty')">美容・コスメ</div><div class="cat-chip" onclick="filterCat(this,'Collectibles')">ホビー・コレクション</div><div class="cat-chip" onclick="filterCat(this,'Electronics')">家電・デジタル</div><div class="cat-chip" onclick="filterCat(this,'FMCG')">日用品・消耗品</div><div class="cat-chip" onclick="filterCat(this,'Fashion')">ファッション</div><div class="cat-chip" onclick="filterCat(this,'Home &amp; Living')">ホーム・リビング</div></div>
+    
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f5775d0c564e4efb9e5716031471328e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【期間限定1+1】センスウェア 練り香水 ホワイトリリー ｜メンズ香水 モテ香水 ベルガモット ホワイトムスク ウッド バニラ フローラル シトラス フェロモン成分配合 SENSE WEAR</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥4,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737381502890706465?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/36c49946fe854c669caad8fc5af6c7fe~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【dadawoca】匠の魂 極上の切れ味 爪切り 飛散防止 ステンレス 高級 つめきり 切った爪が飛び散らない 高耐久 爪やすり付き プレゼント 贈り物 選べる2サイズ</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥4,560</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734468085687223889?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/45cb8f7b73d7493ebc98f7f3134f9030~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">dadawoca あぶらとりフィルム ミラー付き収納ケースセット 脂性肌向け 水分を残し皮脂だけ吸収 パフ付き ワンプレスでテカリ抑え メイク直し簡単 携帯便利 さらさらマット肌 100 枚入り</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥12,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737732807415858985?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4657c791ff464619b7ac2223964bbf47~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【新登場】センスウェア 練り香水 ホワイトリリー ｜メンズ香水 モテ香水 ベルガモット ホワイトムスク ウッド バニラ フローラル シトラス フェロモン成分配合 SENSE WEAR</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥4,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731973431606150689?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e84f3537a7c84c7b87e7617f2a1959f5~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【ビタミン&amp;グルタチオン】ビタミン/トーンアップ/くすみ/ビタミンC/美容液/ツヤ肌/高保湿</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥9,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733338319522596593?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/ce27381aedfb43429b9b755d08778119~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】インフィニットワン ステラホワイト 練り香水 メンズ 30g ムスク ホワイトリリー イランイラン 香水 フレグランスクリーム</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥6,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735155288333780507?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Beauty" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/0a2104a31efc44589ad1356b3fb70c1f~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Weback メイクブラシ＆パフ クレンジングソープ シリコンパッド付 除菌 深層洗浄 頑固なファンデーション汚れをすっきりオフ ウォータープルーフ対応 化妝用具 洗浄剤</div>
+          <div class="product-tags"><span class="tag">美容・コスメ</span><span class="tag price">¥5,500</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734642382647232038?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f602cc1ec15b42eca11c6ec55deefdcc~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">特大バター taonini 特大バター、土のような質感、手作り・無毒、食品グレードのシリコン製スクイーズ。ゆっくりと戻る反動でストレス解消に役立つおもちゃです。</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥6,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736905959913588475?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f4ad840a67514d38b09a0981aad12a99~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Inn 音の左と右のこだま 萌粒ブラインドバッグ（1袋にビーズが4粒入っています）</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥5,900</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737668484268853199?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/95bb7be937934acb8aeb58832ec71b3d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MELLAB スクイーズ 手作りキット 女の子用 おもちゃ メイキングトイ やわらかい 低反発素材 スクイーズ材料セット 知育玩具 小学生向け 工作・自由研究 誕生日プレゼント ギフト ふわふわ・もちもち質感 [日本語説明書付き]（ピンク）</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥5,188</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733216183143270077?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/26314aa60cc44d8daecbe68976e456dd~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">ぷにぷに極上水感 柔らか低反発 mochineko 手描きオリジナル手作り 食品グレードシリコーン スクイーズ猫おもちゃ ストレス解消減圧グッズ 大人向け 誕生日・クリスマスプレゼント</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥6,600</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736737161965700690?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/77aa917129954a2f8f404f1edad53cef~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MOMOCO NO.2ボボミルクカップクラブフルーツシリーズ（開封後のキャンセル・返品交換はできません）2.0</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥5,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737320120090789522?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Collectibles" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f1fbf8d373f44237a428c76463a2bab6~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">キャラメルプリン taonini キャラメルプリン、土のような質感、手作り・無毒、食品グレードのシリコン製スクイーズ。ゆっくりと戻る反動でストレス解消に役立つおもちゃです。</div>
+          <div class="product-tags"><span class="tag">ホビー・コレクション</span><span class="tag price">¥5,600</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736802133614954235?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/262d22439a8346cfa2615594d23dd3f8~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Beelicious ノンフライヤー 4.5L 大容量、静音マットブラック ・見える窓付き、エアフライヤー、油カット、省エネ、最高温度220℃、1-5人用、家庭用、テーブルトップ、電動フライヤー</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥19,480</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731949276221769405?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1ef58577e77f48c990789907e7999e7e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【業界初ストラップ構造・CASEKOO公式ストア】iPhone 18 Pro/18 Pro Max 用 ケース クリア 隠しバックル 最大25W急速充電対応  超 耐衝撃 高耐久性 透明 黄変防止 スマホ ストラップ ハンドストラップ付属 落下紛失防止 両手解放 いphone18pro max/18pro/17pro max/17pro/17/16 pro max/16pro/16 用ケース「LINKOO」(バーガンディ/グレイシャー/シルバー)</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥6,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735866698447553852?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5412d74ab6cc4e90bdb203a2a4129c54~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">新発売 YETE アイスクリーム脱毛器 28.8J大エネルギー サファイア冷却 全身対応 軽量350g</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥39,800</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734724329084322902?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/652759541a8d49309df5d3c79a0d8342~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Manspot メンズボディシェーバー 電動シェーバー ボディトリマー 全身対応 VIO対応 R角セラミック刃 チクチクしにくい 防水 お風呂で使える 充電式</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥5,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734913841297130961?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/4dae48cc24a3404698e76e5cce49c1c4~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MOFT【公式直営店】多機能カードケース MagSafe対応 財布 メンズ レディース ウォレット モフトマグセーフ iPhone カードケース カード 収納 名刺入れ 折りたたみ式 使いやすい MOVAS耐久素材 薄型 軽量 コンパクト ミニ 小さい 外出 旅行 さいふ ビジネス 日常に便利 テラコッタ スタンドなし 磁気カード非対応</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥5,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735129418080356126?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/0f749d6f123c44fa8ac4aa8694d59a92~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【業界初ストラップ構造・CASEKOO公式ストア】iPhone 18 Pro/18 Pro Max 用 ケース MagSefe対応 衝撃吸収 高耐久性 滑り止め 指紋防止 マット仕上げ マグネット搭載 頑丈 黄変防止 スマホ ストラップ 落下紛失防止 両手解放 いphone18pro max/18pro/17pro max/17pro/17/16 pro max/16pro/16 用ケース「LINKOO」(バーガンディ/グレイシャー/ブラック/シルバー)</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥6,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736664922679838012?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5090daf9ec394a2f9997d1156be4c56b~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MOFT【公式直営店】モフト スマホスタンド 8-in-1多機能スタンド カードケース付き MagSafe対応/NFC/Suica/タッチ決済対応｜iPhoneシリーズ・全機種対応｜強力磁力＆アイアンリング付き｜MOVAS素材｜薄型・軽量・折りたたみ式｜多角度調整・三脚 携帯スタンド｜自撮り・動画視聴・ウェブ会議・ドラマ鑑賞・記録撮影・旅行に最適（カード収納）</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥6,780</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734513304728930078?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/094e868e517b4d929985c3bac4a5ad75~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MOFT【公式直営店】モフト スマホスタンド MagSafe対応 七変化マルチスタンド 携帯スタンド iPhone 18/17/16/15/14/13/12シリーズ対応 MOVAS耐久素材 薄型・軽量・折りたたみ式・持ち運び便利 多角度調整・三脚兼用・強力なMagSafeシール付き 自撮り・動画視聴・会議・旅行に便利</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥5,780</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734501497529730846?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Electronics" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/3b4fdefe9a2b4453bab8e3eefce8853d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">RORRY 10000 mAhポータブル充電器（内蔵ケーブル付き）|Apple Watch用3-in-1軽量パワーバンク|4つのデバイスの充電をサポート|磁気充電|タイプC急速充電|Apple Watch、iPhone16/15/14、iPad、AirPodsに対応</div>
+          <div class="product-tags"><span class="tag">家電・デジタル</span><span class="tag price">¥7,500</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733557980877784562?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/5d6ad71757134cd9b326573df9085fc3~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】ELLISS-エルリス リポソーマル マルチビタミン C ブースター 2000 レモン味 20mL×7本/500mg×14粒</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥4,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1735360714653861045?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/cbf9c8d5fa024f478be79b24e2fa3b02~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MAGINA マギナ 亜鉛 サプリ シトルリン アルギニン 49500mg サプリメント 1袋(約30日分)</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥4,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736139096473044513?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/20ce436196db400bb09da0c0f0915d23~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">tiktok限定【酵素3箱おまとめ買いセット＋10本＋無添加石鹸】Amourenzyme 100% 原液酵素 アムールエンザイム</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥68,370</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736819462463653401?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/14b661d09f544e758db5780ad22d859b~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Liapu 多用途バスルームクリーナー：強力な汚れ除去・全菌類の完全駆除。 鏡、トイレ、シャワーのスケールや黒い斑点を除去します。 フレッシュな香り処方。</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥6,498</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732589142383495068?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/fd906228f8254cafbe436e4524d29b3e~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">tiktok限定【2箱＋10本】Amourenzyme 100% 原液酵素 アムールエンザイム 30包</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥44,856</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736645291447649817?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/07a52856802843b887d173b9576d1d9b~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【しだっち社長推奨】NMN 5ALA コエンザイムQ10 トリポワ ブロック60粒［ネオファーマジャパン袋井工場で生産された原料を配合］サプリメント ファイブアラ 5ala コエンザイムQ10 NMN 日本製</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥5,940</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732228005488657661?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/b156078d3a34407594278f0e1f497b54~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">X-PLOSION エクスプロージョン スキムミルクプロテイン ミルクチョコレート味 SMP 日本製造 タンパク質補給 筋トレサプリ</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥9,998</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737567841860486669?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/e017caf96f504cb692db9d594202d535~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">グローバルム 浴室クリーナー 99.9%のバクテリア除去 30秒で効果 除菌&amp;清掃 500ml</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥6,498</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732603547471611804?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/0af911a8c17c4ecbbe63f5b2b6f726ba~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【髪と肌を同時にアップグレード】Plamine TSUYA&amp;SARA(ツヤサラ) 30包入</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥5,616</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732993409082623903?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="FMCG" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1644aec820f247aea8e55f10ab37569d~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">- BSP - ビューティスタイルプロテイン　B-ST プロトレーナー監修 ホエイ＆ソイ　ビターココア　1,000g　国内製造</div>
+          <div class="product-tags"><span class="tag">日用品・消耗品</span><span class="tag price">¥7,560</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734318721728415009?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f5d749d2dee2403ca5bf37dde11325e4~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【BARGOCH】ストッパー付き スーツケース 機内持ち込み フレームタイプ S/M/Lサイズ USB充電ポート カップホルダー 軽量 大容量 キャリーケース ダイヤルロック ダブルキャスター バッグ 1-3泊 4-6泊 7泊～ 最大2年保証</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥21,450</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733560167057032851?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/54e5deb74e084adcbb6528db8a5ccc39~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">メンズ秋冬カーゴトラックスーツ 2点セット、フード付きフルジップ多ポケットジャケット＋ドローコード・裾リブ仕様カーゴスウェットパンツ、ファスナーポケット付きルーズな機能性セットアップ、アウトドア・ストリート・普段使いのカジュアルウェア、多色展開、S〜3XLサイズ在庫あり</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥7,533</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737170005953840651?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/1252c55bfc37484a891ac8da9e0a1830~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">TAKASYOU スーツケース キャリーケース キャリーバッグ 4カラー選ぶ 小型1-3日用 宿泊 超軽 大容量 Sサイズ トランク 修学旅行 海外旅行 GOTOトラベル 国内旅行 カップホルダー付き</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥9,760</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1731872883083543619?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/a80fa9a46bf642928224717ec2e4fd46~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">レディース ショルダーバッグ 斜めがけ リュック 肩掛け シヨルダー 2way 斜めがけバッグ 大きめ 軽量 大容量 A4 リュックサック バッグ</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥7,980</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736802520621614577?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/24b9346ab00a4616857a574691656c3c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【新色ストライプ登場】ジャージみたいなセットアップ テーラード ジャケット スラックス 洗える カジュアルスーツ 上下セット セットアップ メンズ スーツ  オフィスカジュアル ビジネスカジュアル 16126</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥8,995</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734039104155583731?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/ebd14bca98f342fcb9a994cbad8db207~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">[Erisea] 財布 メンズ 長財布 本革 大容量サイズ ファスナー ボックス型小銭入れ カード16枚以上 縦型カード収納 一流の革職人が作る 紳士用 ビジネス スタイリッシュ 金運 多機能 通帳ポケット 牛革 無地 ウォレット ながざいふ 人気ブランド ギフト 父の日ギフト</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥5,670</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732257931594532437?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/eca3d73006654cc58e4655adbca2c7fa~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">[クロックス公式ストア] クラシック クラフテッド ヴィーガン スウェード クロッグ</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥9,350</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736153240517445017?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Fashion" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/00784efd38014e24acf4a9e60ef04198~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">※2点セット《小顔見えニットのトレンドコーデセット》【Lumier】ナポレオンジップニットカーディガン+ベロアレースドレープフレアスカート(2set)_秋の大人カジュアルコーデに欠かせない、ナポレオンデザインのジップニットカーディガンとベロアレースドレープスカートのセット。装飾ボタンがアクセントの存在感あるシルエットで、着回し力抜群。ロングスカートとの相性も完璧で、通勤からデートまで幅広くスタイリング可能。期間限定で今すぐチェック。</div>
+          <div class="product-tags"><span class="tag">ファッション</span><span class="tag price">¥9,900</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1737806043217298507?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/7a957e4c9e0546d194ae25ba68d7f3c2~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">EXCEPTION 【新色登場・人気カラー再入荷・即納在庫あり】ふわとろ毛布 活用ひざ掛け 膝掛け ソファーブランケット ソファー用 オールシーズン 厚手 防寒 暖かい 大判 H S SD D おしゃれ 軽量 洗濯可能 秋冬 シングル セミダブル ダブル ギフト プレゼント 寝具 インテリア リビング 洗える もこもこ</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥4,990</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732534565694310378?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/c3e30df135114ec8b6e40edd6c20a668~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【公式】オットキャスト Ottocast Play2Video Ultra Android 12 CarPlay Box 人気アプリTVer/YouTube/Netflix/Prime Videoが視聴可能 2016年以降の純正で有線のカープレイ搭載車に対応</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥25,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732702839966237843?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f49a89d0e3634addb46ce7b53ffe83db~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">「素足がよろこぶ」さらふわ質感!【今週限定58％オフ＋300円クーポン配布中】IroDori Plus高反発ラグマット ウレタン極厚 130×185cm 185×185cm 185×240cm 洗える おしゃれ マイクロファイバー 床暖房対応 洗濯可能です 滑り止め ホットカーペット 無地 長方形 撥水加工 はっすい</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥7,960</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734373200317089338?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/8f4d86214aba46c789fb5b4e530e6fcd~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">とろけるような肌触り！オールシーズン フランネル キルティングラグ おしゃれ対応90x130cm/130×185cm/185×185cm/185×240cm  丸洗いok  おしゃれでふんわりやわらか 床暖房・ホットカーペット対応 滑り止め加工</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥6,248</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732712893920020026?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/8e8d69e16f004cb19ffa305277d8c15c~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【正規代理店・快適良品価格】Homsee 人間工学設計の蝶型枕。高さ調節可能で通気性が良く、柔らかく質の高い睡眠体験を提供します。</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥8,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1734869624786552656?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/aef9f42e716f4519881dd9d746c82654~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【半導体冷却でスマホ発熱対策】Boleve車載スマホホルダー MagSafe対応 Qi2 15W急速充電 ワイヤレス充電器 真空吸盤 N55磁石 360°回転 片手操作 iPhone・Android対応 通勤/ドライブ/長距離運転/車内/出張</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥8,331</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1736365581456082510?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/f33264f454ea4d8b91e63007deacf191~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">Suyomu 人間工学 メモリフォーム枕 Oeko-Tex認証の環境素材 通気性の蝶型デザイン 低反発・温度調節機能 首元のカーブにフィット 無臭素材 清涼感のある通気カバー付き ゾーン設計 幅広いアームレスト 全方向対応（仰向け・横向き・うつぶせ）オールシーズン対応 肩・腰への負担ゼロ 深い眠り 快適な睡眠体験 ギフトに最適 68×35×10cm</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥8,000</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733422230613952426?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/9ad51d49109a4f19b0338c3dd23d4bd4~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">【国内即納】セール中 三日間限定！ Boleve【急速充電スマホホルダー】スマホホルダー 車 ワイヤレス充電 マグネット【ナノジェル吸盤・360°回転】MagSafe 車載ホルダー 超強N55磁石 折りたたみ式 カー用品 片手操作【非MagSafe機種OK/吸盤水洗いOK/革もOK/跡残らず】iPhone 17/iPhone 17 Pro/iPhone 16/Sony/Galaxy/HUAWEI/Google/その他Qi機種</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥5,750</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1733547737063196238?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="product" data-cat="Home &amp; Living" data-level="L2">
+      <div class="product-row">
+        <div class="product-thumb"><img src="https://p16-oec-va.ibyteimg.com/tos-alisg-i-aphluv4xwc-sg/dd5ee8e6aece49cbbbfb5ca56e6dd70a~tplv-o3syd03w52-resize-jpeg:200:200.image?" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="product-info">
+          <div class="product-name">MERACH ツイストボード ダンスマシン 体幹 トレーニング器具 女性 筋トレ 筋トレ器具 ダイエット器具 ダイエット 有酸素運動 抵抗バンド付き エクササイズ ポータブル ウエストシェイパー 自宅用</div>
+          <div class="product-tags"><span class="tag">ホーム・リビング</span><span class="tag price">¥8,999</span></div>
+          <div class="btn-row">
+            <a href="https://shop.tiktok.com/view/product/1732263493688919997?region=JP&amp;locale=ja" target="_blank" class="btn btn-primary">商品を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+          </div>
+          <div class="tab-content">
+            
+<div class="disclaimer">
+  <div class="disclaimer-head">
+    <span class="disclaimer-badge">免責</span>
+    <span class="disclaimer-title">動画を見る前にお読みください</span>
+  </div>
+  <div class="disclaimer-summary">
+    <strong>コピーではなく「仕組み」を参考に。</strong><br>
+    時期・動画の構造・商品のアピール・期間限定、この4つの視点でご覧ください。
+  </div>
+  <div class="disclaimer-toggle" onclick="toggleDisclaimer(this)">詳しく見る</div>
+  <div class="disclaimer-details">
+    <strong>見るときの4つの視点</strong>
+    <ul>
+      <li><strong>⏰ 時期</strong>：なぜこのタイミングで伸びたのか（セール・季節・キャンペーン）</li>
+      <li><strong>🎬 動画の構造</strong>：冒頭フック・展開・CTAの組み立て</li>
+      <li><strong>🛍️ 商品のアピール</strong>：どの機能・ベネフィットをどの順で訴求しているか</li>
+      <li><strong>⏳ 期間限定</strong>：クーポン・在庫・時限訴求の作り方</li>
+    </ul>
+    <div class="caution">⚠️ そのままコピーした動画を投稿すると、プラットフォームのペナルティ対象になる可能性があります。「コミュニティ運営が共有してくれたから大丈夫」とはなりません。<strong>投稿されたコンテンツの責任はクリエイターご自身に帰属します。</strong></div>
+    <div class="continue-note">
+      📌 引き続きランクインままの動画もあるため、「先週と変わっていない」と思わないでください。<br>
+      <strong>ランクイン継続中の動画は、それだけ持続的に機能している証</strong>です。新規登場の動画と合わせて、両方の視点でご覧ください。
+    </div>
+  </div>
+</div>
+
+            
+    <div class="section-title">今週の人気動画 ・ 全9件</div>
+    
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693820732547124501?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@damarenai_chiyo/video/7693820732547124501" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7694533151057513734?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@95line_0324/video/7694533151057513734" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7692714936534961429?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@nextturn.cs/video/7692714936534961429" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693095326529490197?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@chihanawkwk/video/7693095326529490197" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693160640264867092?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@e_a_r_27ao/video/7693160640264867092" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7692262828408950034?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@asu_kurashi/video/7692262828408950034" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693917418342681863?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@yukiii.life/video/7693917418342681863" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7695341766748163346?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@hatenkou22/video/7695341766748163346" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+
+    <div class="video-card">
+      <div class="video-embed-wrap">
+        <iframe data-src="https://www.tiktok.com/player/v1/7693577486487129365?music_info=1&description=1" allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-body">
+        <a href="https://www.tiktok.com/@yutamaru_123/video/7693577486487129365" target="_blank" class="video-link">▶ TikTokで開く</a>
+      </div>
+    </div>
+    
+    
+          </div>
+        </div>
+        
+
+  <footer>TikTok Shop Japan Creator Support · 週次更新</footer>
+
+<script>
+const LEVEL_META = [{title:'はじめよう編',sub:'初めてのクリエイターでも売れやすい、鉄板商品&バズ動画をお届け',badge:'🌱 初心者向け',bodyClass:''},{title:'もっと伸ばそう編',sub:'今まさに加速中！上昇トレンド商品で売上を次のレベルへ',badge:'🚀 経験者向け',bodyClass:'lv-l1'},{title:'次のステージへ編',sub:'トップクリエイターが選ぶ、プレミアム&高GMV商品ラインナップ',badge:'⭐ 経験者α向け',bodyClass:'lv-l2'}];
+function switchLevel(idx){
+  document.querySelectorAll('.level-band > .level-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.level-view').forEach((v,i)=>v.classList.toggle('active',i===idx));
+  const m = LEVEL_META[idx];
+  document.getElementById('hdr-title').textContent = m.title;
+  document.getElementById('hdr-sub').textContent = m.sub;
+  document.getElementById('hdr-badge').textContent = m.badge;
+  document.body.className = m.bodyClass;
+  window.scrollTo({top:0,behavior:'instant'});
+  lazyLoadVideos('lv-'+idx);
+}
+
+function switchTab(idx, scope){
+  const root = scope ? document.getElementById(scope) : document;
+  root.querySelectorAll(':scope > .tabs .tab, :scope .tabs > .tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  root.querySelectorAll(':scope > .tab-content, :scope .tab-content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+}
+function filterCat(chip, cat){
+  const container = chip.closest('.tab-content');
+  container.querySelectorAll('.cat-chip').forEach(c=>c.classList.toggle('active', c===chip));
+  container.querySelectorAll('.product').forEach(p=>{
+    p.style.display = (cat==='all' || p.dataset.cat===cat) ? '' : 'none';
+  });
+}
+function toggleDisclaimer(el){
+  el.closest('.disclaimer').classList.toggle('open');
+}
+function lazyLoadVideos(scope){
+  const root = scope ? document.getElementById(scope) : document;
+  root.querySelectorAll('iframe[data-src]:not([src])').forEach(f=>{
+    const r = f.getBoundingClientRect();
+    if (r.top < window.innerHeight + 500) {
+      f.src = f.dataset.src;
+    }
+  });
+}
+window.addEventListener('scroll', ()=>lazyLoadVideos(), {passive:true});
+window.addEventListener('load', ()=>lazyLoadVideos());
+
+</script>
+</body>
+</html>
